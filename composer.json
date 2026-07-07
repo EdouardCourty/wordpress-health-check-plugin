@@ -1,0 +1,48 @@
+{
+    "name": "lgarret/health-check-wordpress",
+    "description": "WordPress plugin providing a /wp-json/health-check/v1/health endpoint to monitor application and dependency status",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "brain/monkey": "^2.6",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "php-stubs/wp-cli-stubs": "^2.9",
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^10.5 || ^11.0",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "yoast/phpunit-polyfills": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "HealthCheck\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HealthCheck\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "phpstan": "phpstan analyse --memory-limit=512M",
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix"
+    },
+    "scripts-descriptions": {
+        "test": "Run the test suite.",
+        "phpstan": "Run PHPStan static analysis.",
+        "cs-check": "Check code style without making changes.",
+        "cs-fix": "Automatically fix code style issues."
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-stubs/wordpress-stubs": false
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,14 @@
+parameters:
+	level: max
+	paths:
+		- src
+		- tests
+	excludePaths:
+		- tests/stubs
+	scanFiles:
+		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+	treatPhpDocTypesAsCertain: false
+	bootstrapFiles:
+		- phpstan-bootstrap.php
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon

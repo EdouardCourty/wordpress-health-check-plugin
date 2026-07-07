@@ -22,7 +22,7 @@ A WordPress plugin providing a `/wp-json/health-check/v1/health` endpoint to mon
 
 ## Requirements
 
-- PHP **≥ 8.2**
+- PHP **≥ 8.1**
 - WordPress **≥ 6.0**
 
 ---

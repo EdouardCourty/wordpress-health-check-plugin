@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace HealthCheck\Dto;
 
-final readonly class HealthCheckResult
+final class HealthCheckResult
 {
     public function __construct(
-        public bool $success,
-        public ?string $error = null,
+        public readonly bool $success,
+        public readonly ?string $error = null,
     ) {
     }
 

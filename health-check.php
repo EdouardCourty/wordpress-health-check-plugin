@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/LouisGarret/health-check-wordpress
  * Description: Provides a /wp-json/health-check/v1/health endpoint to monitor application and dependency status, with optional auth-gated detailed results and WP-CLI commands.
  * Version: 1.0.1
- * Requires PHP: 8.2
+ * Requires PHP: 8.1
  * Requires at least: 6.0
  * Author: Louis Garret
  * License: MIT

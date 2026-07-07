@@ -12,6 +12,8 @@
 
 declare(strict_types=1);
 
+define('HEALTH_CHECK_VERSION', '1.0.0');
+
 spl_autoload_register(function (string $class): void {
     $prefix = 'HealthCheck\\';
     $baseDir = __DIR__ . '/src/';

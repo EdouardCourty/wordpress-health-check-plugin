@@ -137,9 +137,22 @@ add_filter('health_check_checks', function (array $checks): array {
 
 ```bash
 composer install
-vendor/bin/phpunit             # Run tests
-vendor/bin/phpunit --coverage-text  # With coverage
+composer test                  # Run tests
+composer phpstan               # Static analysis
+composer cs-check              # Code style check
 ```
+
+### Making a release
+
+```bash
+composer release 1.0.1
+```
+
+This bumps the version in `health-check.php`, commits, tags, and pushes. CI then:
+
+1. Runs quality checks (PHPStan, CS fixer, PHPUnit) on PHP 8.1–8.4
+2. Builds a production zip via `git archive` (excluding dev files)
+3. Creates a GitHub Release with the zip attached
 
 ## License
 

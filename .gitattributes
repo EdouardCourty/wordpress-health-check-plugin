@@ -6,6 +6,7 @@
 /phpstan-bootstrap.php export-ignore
 /phpunit.xml.dist export-ignore
 /CLAUDE.md export-ignore
+/bin export-ignore
 /composer.json export-ignore
 /composer.lock export-ignore
 /tests export-ignore

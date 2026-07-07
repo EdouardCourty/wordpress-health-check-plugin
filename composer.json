@@ -25,17 +25,22 @@
             "HealthCheck\\Tests\\": "tests/"
         }
     },
+    "extra": {
+        "version": "1.0.0"
+    },
     "scripts": {
         "test": "phpunit",
         "phpstan": "phpstan analyse --memory-limit=512M",
         "cs-check": "php-cs-fixer fix --dry-run --diff",
-        "cs-fix": "php-cs-fixer fix"
+        "cs-fix": "php-cs-fixer fix",
+        "release": "php bin/release.php"
     },
     "scripts-descriptions": {
         "test": "Run the test suite.",
         "phpstan": "Run PHPStan static analysis.",
         "cs-check": "Check code style without making changes.",
-        "cs-fix": "Automatically fix code style issues."
+        "cs-fix": "Automatically fix code style issues.",
+        "release": "Bump version, tag and push to trigger CI release."
     },
     "config": {
         "sort-packages": true,

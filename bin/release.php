@@ -37,6 +37,13 @@ file_put_contents($pluginFile, $content);
 
 echo "Updated version to $version in health-check.php\n";
 
+// Validate the modified file is valid PHP
+passthru('php -l ' . escapeshellarg($pluginFile), $lintCode);
+if ($lintCode !== 0) {
+    fwrite(\STDERR, "PHP lint check failed after version update.\n");
+    exit(1);
+}
+
 // Commit, tag, push
 $commands = [
     "git add health-check.php",

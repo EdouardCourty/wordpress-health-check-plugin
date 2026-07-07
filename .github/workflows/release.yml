@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   quality:
     name: Quality checks
@@ -53,4 +56,10 @@ jobs:
         with:
           files: health-check-wordpress.zip
           name: ${{ github.ref_name }}
-          generate_release_notes: true
+          body: |
+            ## ${{ github.ref_name }}
+
+            See the [changelog](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) for details.
+
+            ### Installation
+            Download the `health-check-wordpress.zip` asset below, then upload it in WordPress Admin → Plugins → Add New → Upload Plugin.

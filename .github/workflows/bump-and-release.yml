@@ -1,0 +1,99 @@
+name: Bump & Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g. 1.0.2)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  quality:
+    name: Quality checks
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: PHPStan
+        run: composer phpstan
+
+      - name: PHP CS Fixer
+        run: composer cs-check
+
+      - name: PHPUnit
+        run: composer test
+
+  bump-and-release:
+    name: Bump, build & publish release
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          coverage: none
+
+      - name: Update version in health-check.php
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          php -r "
+            \$content = file_get_contents('health-check.php');
+            \$content = preg_replace('/\*\s*Version:\s*\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\d+)?/', '* Version: $VERSION', \$content);
+            \$content = preg_replace(\"/define\('HEALTH_CHECK_VERSION',\s*'[^']+'\);\", \"define('HEALTH_CHECK_VERSION', '$VERSION');\", \$content);
+            file_put_contents('health-check.php', \$content);
+          "
+          php -l health-check.php
+
+      - name: Commit, tag, and push
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add health-check.php
+          git commit -m "feat: bump version to $VERSION"
+          git tag "v$VERSION"
+          git push origin main
+          git push origin "v$VERSION"
+
+      - name: Build plugin zip
+        run: git archive --format=zip --prefix=health-check-wordpress/ -o health-check-wordpress.zip "v${{ github.event.inputs.version }}"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: health-check-wordpress.zip
+          name: v${{ github.event.inputs.version }}
+          tag_name: v${{ github.event.inputs.version }}
+          body: |
+            ## v${{ github.event.inputs.version }}
+
+            See the [changelog](https://github.com/${{ github.repository }}/commits/v${{ github.event.inputs.version }}) for details.
+
+            ### Installation
+            Download the `health-check-wordpress.zip` asset below, then upload it in WordPress Admin → Plugins → Add New → Upload Plugin.

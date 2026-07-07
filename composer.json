@@ -40,7 +40,7 @@
         "phpstan": "Run PHPStan static analysis.",
         "cs-check": "Check code style without making changes.",
         "cs-fix": "Automatically fix code style issues.",
-        "release": "Bump version, tag and push to trigger CI release."
+        "release": "Bump version, tag and push to trigger the CI release workflow."
     },
     "config": {
         "sort-packages": true,

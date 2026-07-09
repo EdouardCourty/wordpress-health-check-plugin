@@ -3,6 +3,12 @@
     "description": "WordPress plugin providing a /wp-json/health-check/v1/health endpoint to monitor application and dependency status",
     "type": "wordpress-plugin",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Edouard Courty",
+            "email": "edouard.courty2@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=8.1"
     },
@@ -33,14 +39,28 @@
         "phpstan": "phpstan analyse --memory-limit=512M",
         "cs-check": "php-cs-fixer fix --dry-run --diff",
         "cs-fix": "php-cs-fixer fix",
-        "release": "php bin/release.php"
+        "release": "php bin/release.php",
+        "dev:up": "bash dev/setup.sh",
+        "dev:down": "docker compose -f dev/docker-compose.yml down",
+        "dev:destroy": "docker compose -f dev/docker-compose.yml down -v",
+        "dev:restart": "docker compose -f dev/docker-compose.yml restart wordpress",
+        "dev:logs": "docker compose -f dev/docker-compose.yml logs -f wordpress",
+        "dev:cli": "docker compose -f dev/docker-compose.yml exec wpcli wp --path=/var/www/html",
+        "dev:cache-clear": "docker compose -f dev/docker-compose.yml exec wpcli wp health cache clear --path=/var/www/html"
     },
     "scripts-descriptions": {
         "test": "Run the test suite.",
         "phpstan": "Run PHPStan static analysis.",
         "cs-check": "Check code style without making changes.",
         "cs-fix": "Automatically fix code style issues.",
-        "release": "Bump version, tag and push to trigger the CI release workflow."
+        "release": "Bump version, tag and push to trigger the CI release workflow.",
+        "dev:up": "Start the local WordPress dev environment (installs & activates the plugin, idempotent).",
+        "dev:down": "Stop the local dev environment (keeps the database and WordPress volumes).",
+        "dev:destroy": "Stop the local dev environment and wipe all its data.",
+        "dev:restart": "Restart the WordPress container.",
+        "dev:logs": "Follow the WordPress container logs.",
+        "dev:cli": "Run a wp-cli command in the dev environment, e.g. composer dev:cli -- plugin list.",
+        "dev:cache-clear": "Clear the cached health check result in the dev environment."
     },
     "config": {
         "sort-packages": true,

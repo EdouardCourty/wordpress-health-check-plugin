@@ -15,6 +15,8 @@ composer test-coverage  # phpunit --coverage-text
 
 CI (`.github/workflows/ci.yml`) runs on PHP 8.1/8.2/8.3/8.4: `composer validate --strict`, then `composer test`.
 
+A local WordPress dev environment (Docker, `composer dev:*` scripts) is available to click through the plugin for real — see [`dev/README.md`](dev/README.md).
+
 ## Architecture
 
 **Request flow**: On plugin load, `Plugin` hooks into `rest_api_init` to register a single GET route at `/wp-json/health-check/v1/health` pointing to `HealthCheckEndpoint::handle()`. The endpoint calls `HealthCheckService::runAll()`, then decides response shape based on auth:

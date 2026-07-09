@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HealthCheck;
 
+use HealthCheck\Admin\SettingsPage;
 use HealthCheck\Check\DatabaseCheck;
 use HealthCheck\Check\HealthCheckInterface;
 use HealthCheck\Cli\HealthCacheClearCommand;
@@ -25,6 +26,7 @@ final class Plugin
     {
         add_action('rest_api_init', [$this, 'registerRoute']);
         add_action('init', [$this, 'registerCliCommands']);
+        add_action('init', [$this, 'registerAdminSettings']);
     }
 
     public function registerRoute(): void
@@ -46,6 +48,15 @@ final class Plugin
 
         \WP_CLI::add_command('health check', new HealthCheckCommand($this->healthCheckService));
         \WP_CLI::add_command('health cache clear', new HealthCacheClearCommand());
+    }
+
+    public function registerAdminSettings(): void
+    {
+        if (!is_admin()) {
+            return;
+        }
+
+        (new SettingsPage())->register();
     }
 
     /**

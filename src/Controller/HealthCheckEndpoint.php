@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace HealthCheck\Controller;
 
+use HealthCheck\Config\HealthCheckSettings;
 use HealthCheck\Dto\HealthStatus;
 use HealthCheck\Service\HealthCheckService;
 
@@ -16,7 +17,7 @@ final class HealthCheckEndpoint
     public function __construct(
         HealthCheckService $healthCheckService,
         ?string $secret = null,
-        string $header = 'Authorization',
+        string $header = HealthCheckSettings::DEFAULT_HEADER,
     ) {
         $this->healthCheckService = $healthCheckService;
         $this->secret = $secret;
@@ -25,12 +26,8 @@ final class HealthCheckEndpoint
 
     public static function fromDefaults(HealthCheckService $healthCheckService): self
     {
-        $secret = defined('HEALTH_CHECK_SECRET') ? (string) HEALTH_CHECK_SECRET : null;
-        $header = defined('HEALTH_CHECK_HEADER') ? (string) HEALTH_CHECK_HEADER : 'Authorization';
-
-        if (empty($secret)) {
-            $secret = null;
-        }
+        $secret = HealthCheckSettings::resolveSecret()->value;
+        $header = HealthCheckSettings::resolveHeader()->value ?? HealthCheckSettings::DEFAULT_HEADER;
 
         return new self($healthCheckService, $secret, $header);
     }

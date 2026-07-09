@@ -10,6 +10,7 @@ A WordPress plugin providing a `/wp-json/health-check/v1/health` endpoint to mon
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
+  - [Admin settings screen](#admin-settings-screen)
   - [REST API endpoint](#rest-api-endpoint)
   - [WP-CLI commands](#wp-cli-commands)
   - [Creating a custom check](#creating-a-custom-check)
@@ -49,6 +50,12 @@ composer install
 
 ## Configuration
 
+`HEALTH_CHECK_SECRET` and `HEALTH_CHECK_HEADER` are optional — both can be managed
+instead from the plugin's [admin settings screen](#admin-settings-screen) without
+touching `wp-config.php`. If a constant is defined, it always takes precedence over
+the value saved from the admin screen, and the corresponding field is shown read-only
+there.
+
 Configure the plugin by adding constants to your `wp-config.php`:
 
 ```php
@@ -60,14 +67,31 @@ define('HEALTH_CHECK_CACHE_TTL', 300);                 // Seconds (0 = disabled)
 
 | Constant | Default | Description |
 |---|---|---|
-| `HEALTH_CHECK_SECRET` | `null` | Secret token expected in the HTTP header. If `null`, detailed results are never exposed. |
-| `HEALTH_CHECK_HEADER` | `Authorization` | Name of the HTTP header used to send the secret token. |
+| `HEALTH_CHECK_SECRET` | `null` | Secret token expected in the HTTP header. If `null`, detailed results are never exposed. Overrides the admin-screen value if defined. |
+| `HEALTH_CHECK_HEADER` | `Authorization` | Name of the HTTP header used to send the secret token. Overrides the admin-screen value if defined. |
 | `HEALTH_CHECK_TIMEOUT` | `5` | Maximum execution time in seconds for each individual check. |
 | `HEALTH_CHECK_CACHE_TTL` | `300` | Cache TTL in seconds. Set to `0` to disable caching. |
 
 ---
 
 ## Usage
+
+### Admin settings screen
+
+The plugin ships a lightweight settings screen. It's not in the admin sidebar menu —
+open it via the **Réglages** link on the **Plugins** list screen, next to Health Check.
+
+From there you can:
+
+- View and edit the HTTP header name used for auth (falls back to `Authorization`).
+- Generate or regenerate the secret token, and copy it to the clipboard.
+- Copy the full health check endpoint URL, ready to paste into an external monitoring
+  tool.
+
+Both the header and the secret are persisted to the database and used automatically,
+unless overridden by the matching `wp-config.php` constant (see
+[Configuration](#configuration)), in which case the corresponding field is shown
+read-only.
 
 ### REST API endpoint
 
@@ -170,6 +194,10 @@ composer phpstan               # Static analysis
 composer cs-check              # Code style check
 composer cs-fix                # Auto-fix code style
 ```
+
+To click through the plugin (including the admin settings screen) in a real
+WordPress instance, see [`dev/README.md`](dev/README.md) for a Docker-based
+local environment.
 
 ### Making a release
 

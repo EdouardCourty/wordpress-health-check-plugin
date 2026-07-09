@@ -30,6 +30,5 @@ return $config
         'visibility_required' => true,
         'native_function_invocation' => false,
         'native_constant_invocation' => false,
-        'mb_str_functions' => true,
         'modernize_strpos' => true,
     ]);

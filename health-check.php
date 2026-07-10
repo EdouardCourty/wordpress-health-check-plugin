@@ -9,6 +9,7 @@
  * Author: Edouard Courty
  * Author URI: https://github.com/EdouardCourty
  * License: MIT
+ * Network: true
  */
 
 declare(strict_types=1);

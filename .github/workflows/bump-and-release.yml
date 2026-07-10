@@ -70,12 +70,21 @@ jobs:
           "
           php -l health-check.php
 
+      - name: Update version in composer.json
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          php -r "
+            \$json = json_decode(file_get_contents('composer.json'), true);
+            \$json['extra']['version'] = '$VERSION';
+            file_put_contents('composer.json', json_encode(\$json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . \"\n\");
+          "
+
       - name: Commit, tag, and push
         run: |
           VERSION="${{ github.event.inputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add health-check.php
+          git add health-check.php composer.json
           git commit -m "feat: bump version to $VERSION"
           git tag "v$VERSION"
           git push origin main

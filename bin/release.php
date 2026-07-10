@@ -44,9 +44,20 @@ if ($lintCode !== 0) {
     exit(1);
 }
 
+// Update composer.json's extra.version
+$composerFile = $rootDir . '/composer.json';
+$composerJson = json_decode(file_get_contents($composerFile), true);
+$composerJson['extra']['version'] = $version;
+file_put_contents(
+    $composerFile,
+    json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n",
+);
+
+echo "Updated version to $version in composer.json\n";
+
 // Commit, tag, push
 $commands = [
-    "git add health-check.php",
+    "git add health-check.php composer.json",
     "git commit -m \"feat: bump version to $version\"",
     "git tag v$version",
     "git push origin main",
